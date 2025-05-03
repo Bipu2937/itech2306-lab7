@@ -45,4 +45,32 @@ public class BankAccountTest {
         assertFalse(account.withdraw(-10));
         assertEquals(100.0, account.getBalance(), 0.001);
     }
+    
+    @Test
+    public void testTransferFromAnotherBankAccount() {
+        BankAccount source = new BankAccount(200, "Source");
+        BankAccount target = new BankAccount(100, "Target");
+
+        boolean result = target.transfer(source, 50);
+        assertTrue(result);
+        assertEquals(150, target.getBalance(), 0.001);
+        assertEquals(150, source.getBalance(), 0.001);
+    }
+
+    @Test
+    public void testTransferTooMuch() {
+        BankAccount source = new BankAccount(30, "Source");
+        BankAccount target = new BankAccount(100, "Target");
+
+        boolean result = target.transfer(source, 50);
+        assertFalse(result);
+        assertEquals(30, source.getBalance(), 0.001);
+        assertEquals(100, target.getBalance(), 0.001);
+    }
+
+    @Test
+    public void testTransferToSelfFails() {
+        BankAccount account = new BankAccount(100, "Self");
+        assertFalse(account.transfer(account, 20));
+    }
 }
